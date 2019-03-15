@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Frontend/Template/Frontend_Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name = "content">
+        <h:form>
+            <div class=" btn btn-group">
+                <h:commandButton styleClass="btn btn-primary" action="#{districtController.previous}" value="previous" />
+                <h:commandButton styleClass="btn btn-success" action="#{districtController.next}" value="next" />
+            </div>
+            <p>page #{districtController.page} of #{districtController.pageCount()}</p>
+        </h:form>
+        <div class="row">
+            <div class=" col-md-12">
+                <ui:repeat value="#{districtController.districtList}" var="dist">
+                    <li class=" list-group ">
+                        <div class="card" style="width: 70rem;">
+                            <ui:repeat value="#{dist.documentList}" var="d">
+                                <li class=" list-group ">
+                                    <br/>
+                                    <hr/>
+                                    <h:graphicImage class="card-img-top" value="/file/#{d.fileName}" alt="Card image cap"/>
+                                </li>
+                            </ui:repeat>
+                            <div class="card-body">
+                                <h1 class="card-title" style="color:#0062cc ">#{dist.district_Name}</h1>
+                                <p class="card-text"><h4>#{dist.text}</h4></p>
+                            </div>
+                        </div> 
+                    </li>
+                    <br/>
+                    <hr/>
+                    <br/>
+                </ui:repeat>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

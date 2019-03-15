@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Frontend/Template/Frontend_Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name = "content">
+        <h:form>
+            <div class=" btn btn-group">
+                <h:commandButton styleClass="btn btn-primary" action="#{suggestionController.previous}" value="previous" />
+                <h:commandButton styleClass="btn btn-success" action="#{suggestionController.next}" value="next" />
+            </div>
+            <p>page #{suggestionController.page} of #{suggestionController.pageCount()}</p>
+
+        </h:form>
+       <div class="row">
+            <div class=" col-md-12">
+                <ui:repeat value="#{suggestionController.suggestionList}" var="sugg">
+                    <li class=" list-group ">
+                        <div class="card" style="width: 70rem;">
+                            <h:graphicImage class="card-img-top" value="/file/#{sugg.document.fileName}" alt="Card image cap"/>
+                            <div class="card-body">
+                                <h1 class="card-title" style="color:#0062cc ">#{sugg.suggestion}</h1>
+                                <p class="card-text"><h4>#{sugg.comment}</h4></p>
+                            </div>
+                        </div> 
+                    </li>
+                    <br/>
+                    <hr/>
+                    <br/>
+                </ui:repeat>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

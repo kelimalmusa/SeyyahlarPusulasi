@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Login</title>
+        <h:outputStylesheet library="css" name="bootstrap.css"/>
+        <h:outputScript library="js" name="bootstrap.js"/>   
+    </h:head>
+    <h:body>
+        <div class="container" style="margin-top:  10px;">
+            <h:form>
+                <h:commandButton styleClass="btn btn-outline-primary" action="/index?faces-redirect=true" value="Index"/>
+                <h:commandButton styleClass="btn btn-outline-primary" action="/login?faces-redirect=true" value="Login"/>
+                <h:commandButton  styleClass="btn btn-outline-primary" action="/register?faces-redirect=true" value="Register"/>
+                <h:commandButton  styleClass="btn btn-outline-primary" action="/login?faces-redirect=true" value="Admin Panel"/>
+            </h:form>
+
+            <h:form>
+                <p>Username: <h:inputText styleClass="input-group-prepend" value="#{userController.user.name}"/></p>
+                <p>Password: <h:inputText styleClass="input-group-prepend" value="#{userController.user.password}"/></p>
+                <h:commandButton styleClass="btn btn-dark" action="#{userController.login()}" value="Login"/>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

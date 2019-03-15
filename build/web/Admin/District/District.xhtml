@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Admin/Template/Admin_Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="bootstrap.css"/>
+        <h:outputScript library="js" name="bootstrap.js"/>   
+    </h:head>
+    <ui:define name = "content">
+
+        <h:body>
+            <div class ="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <h:form id="district-table"  rendered="#{privilegeController.readPrivi(userController.userLogin.user_group.id)==true}">
+                            <div class=" btn btn-group">
+                                <h:commandButton styleClass="btn btn-primary" action="#{districtController.previous}" value="previous" />
+                                <h:commandButton styleClass="btn btn-success" action="#{districtController.next}" value="next" />
+                            </div>
+                            <p>page #{districtController.page} of #{districtController.pageCount()}</p>
+                            <h:form>
+                                <h:dataTable  styleClass="table table-striped table-hover" value="#{districtController.districtList}" var="dist">
+                                    <h:column>
+                                        <f:facet name="header">ID</f:facet>
+                                            #{dist.id}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">District</f:facet>
+                                            #{dist.district_Name}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">City</f:facet>
+                                            #{dist.city.city}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">process</f:facet>
+                                        <div class="btn btn-group">
+                                            <h:commandButton styleClass="btn btn-sm btn-danger"  rendered="#{privilegeController.deletePrivi(userController.userLogin.user_group.id)==true}" action="#{districtController.deleteConfirm(dist)}" value="Delete"></h:commandButton>
+                                            <h:commandButton styleClass="btn btn-sm btn-dark" rendered="#{privilegeController.updatePrivi(userController.userLogin.user_group.id)==true}" action="#{districtController.update(dist)}" value="Update">
+                                                <f:ajax execute="@this" render="district-form"/></h:commandButton>
+                                        </div>
+                                    </h:column>
+                                </h:dataTable>
+                            </h:form>
+                        </h:form>
+                    </div>
+                    <div class="col-md-5">
+                        <h:form id="district-form" rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id) or privilegeController.updatePrivi(userController.userLogin.user_group.id)}">
+                            <div class="form-group">
+
+                                <label for="BirKitaSeciniz">City</label>
+                                <h:selectOneMenu styleClass="custom-select" id="BirKitaSeciniz" value="#{districtController.district.city}" converter="cityConverter">
+                                    <f:selectItems value="#{districtController.cityList}" var="city" itemValue="#{city}" itemLabel="#{city.city}">
+                                    </f:selectItems>
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputDistrict">District</label>
+                                <h:inputText id="inputIlce" value="#{districtController.district.district_Name}" styleClass="custom-control" required="true">
+                                </h:inputText>
+                            </div>
+                            <div class="form-group">
+                                <label for="inutDistrict">Text</label>
+                                <h:inputTextarea id="inputlce" value="#{districtController.district.text}" styleClass="custom-control">
+                                </h:inputTextarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="favoricities">Select Files</label>
+                                <h:selectManyListbox value="#{districtController.district.documentList}" styleClass="custom-select" converter="fileConverter">
+                                    <f:selectItems value="#{districtController.documentController.documentLists}" var="docu" itemValue="#{docu}" itemLabel="#{docu.fileName}">
+                                    </f:selectItems>
+                                </h:selectManyListbox>
+                                <br/>
+                            </div>
+                            <div class="btn btn-group">
+                                <h:commandButton rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id) and districtController.district.id==null}" styleClass="btn btn-primary" value="Create" action="#{districtController.create()}">
+                                    <f:ajax execute="district-form" render="district-form district-table"/></h:commandButton>
+                                <h:commandButton rendered="#{districtController.district.id!=null}" styleClass="btn btn-info"  value="Update" action="#{districtController.updateDistrict()}" >
+                                    <f:ajax execute="district-form" render="district-form district-table"/></h:commandButton>
+                                <h:commandButton rendered="#{districtController.district.id!=null}" styleClass="btn btn-danger"  value="Clear" action="#{districtController.clearForm()}" >
+                                    <f:ajax execute="@this" render="district-form"/></h:commandButton>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

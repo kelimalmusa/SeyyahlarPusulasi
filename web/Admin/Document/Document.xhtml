@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Admin/Template/Admin_Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name = "content">
+
+        <div class="row">
+            <div class="col-md-7">
+                <h:form id="doc-table" rendered="#{privilegeController.readPrivi(userController.userLogin.user_group.id)==true}">
+                    <div class=" btn btn-group">
+                        <h:commandButton styleClass="btn btn-primary" action="#{documentController.previous}" value="previous" />
+                        <h:commandButton styleClass="btn btn-success" action="#{documentController.next}" value="next" />
+                    </div>
+                    <p>page #{documentController.page} of #{documentController.pageCount()}</p>
+                    <h:form>
+                        <h:dataTable styleClass="table table-hover " value="#{documentController.documentList}" var ="d">
+                            <h:column>
+                                <f:facet name="header">ID</f:facet>
+                                    #{d.id}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">File Name</f:facet>
+                                    #{d.fileName}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">File</f:facet>
+                                <h:graphicImage width="100" value="/file/#{d.fileName}"></h:graphicImage>                
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Delete</f:facet>
+                                <div class="btn btn-group">
+                                    <h:commandButton styleClass="btn btn-sm btn-danger"  rendered="#{privilegeController.deletePrivi(userController.userLogin.user_group.id)==true}" action="#{documentController.deleteConfirm(d)}" value="Delete">
+                                        <f:ajax execute="@this" render="city-form"/></h:commandButton>
+                                </div>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </h:form>
+            </div>
+            <div class="col-md-5" >
+                <h:form enctype="multipart/form-data" rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id) or privilegeController.updatePrivi(userController.userLogin.user_group.id)}">
+                    <div class="form-group">
+                        <label>File</label>
+                        <h:inputFile value="#{documentController.doc}" styleClass="custom-file"/>
+                    </div>
+                    <h:commandButton value="Upload" rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id)==true}" action="#{documentController.upload()}" styleClass="btn btn-danger"/>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+
+

@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Admin/Template/Admin_Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="bootstrap.css"/>
+        <h:outputScript library="js" name="bootstrap.js"/>   
+    </h:head>
+    <ui:define name = "content">
+        <h:body>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7" >
+                        <h:form id="city-table" rendered="#{privilegeController.readPrivi(userController.userLogin.user_group.id)==true}">
+                            <div class=" btn btn-group">
+                                <h:commandButton styleClass="btn btn-primary" action="#{cityController.previous}" value="previous" />
+                                <h:commandButton styleClass="btn btn-success" action="#{cityController.next}" value="next" />
+                            </div>
+                            <p>page #{cityController.page} of #{cityController.pageCount()}</p>
+                            <h:form>
+                                <h:dataTable  styleClass="table table-striped table-hover" value="#{cityController.cityList}" var="city">
+                                    <h:column>
+                                        <f:facet name="header">ID</f:facet>
+                                            #{city.id}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">City Name</f:facet>
+                                            #{city.city}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Country</f:facet>
+                                            #{city.coountry.country_Name}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Users</f:facet>
+                                        <ul>
+                                            <ui:repeat value="#{city.userList}" var="user">
+                                                <li>#{user}</li> 
+                                            </ui:repeat>
+                                        </ul>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">process</f:facet>
+                                        <div class="btn btn-group">
+                                            <h:commandButton styleClass="btn btn-sm btn-danger" action="#{cityController.deleteConfirm(city)}" rendered="#{privilegeController.deletePrivi(userController.userLogin.user_group.id)}" value="Delete">
+                                                <f:ajax execute="@this" render="city-form"/>
+                                            </h:commandButton>
+                                            <h:commandButton styleClass="btn btn-sm btn-success" action="#{cityController.update(city)}" rendered="#{privilegeController.updatePrivi(userController.userLogin.user_group.id)}" value="Update">
+                                                <f:ajax execute="@this" render="city-form"/>
+                                            </h:commandButton>
+                                        </div>
+                                    </h:column>
+                                </h:dataTable>
+                            </h:form>
+                        </h:form>
+                    </div>
+                    <div class="col-md-5">
+                        <h:form id="city-form" rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id) or privilegeController.updatePrivi(userController.userLogin.user_group.id)}">
+                            City
+                            <h:inputText styleClass="input-group-prepend" id="name-surname" label="City" value="#{cityController.city.city}">
+                            </h:inputText>
+                            <br/>
+                            <div class="form-group">
+                                <label for="BirUlkeSeciniz">Country</label>
+                                <h:selectOneMenu styleClass="custom-select" id="BirKitaSeciniz" value="#{cityController.city.coountry}" converter="countryConverter">
+                                    <f:selectItems value="#{cityController.countryList}" var="Country" itemValue="#{Country}" itemLabel="#{Country.country_Name}">
+                                    </f:selectItems>
+                                </h:selectOneMenu>
+                            </div>
+                            <br/>
+                            Text
+                            <h:inputTextarea styleClass="input-group-prepend" id="surname" label="City" value="#{cityController.city.text}">
+                            </h:inputTextarea>
+                            <br/>
+
+                            <div class="form-group">
+                                <label for="Resim">File</label>
+                                <h:selectOneMenu styleClass="custom-select" id="BSeciniz" value="#{cityController.city.document}" converter="fileConverter">
+                                    <f:selectItems value="#{cityController.docList}" var="doc" itemValue="#{doc}" itemLabel="#{doc.fileName}">
+                                    </f:selectItems>
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="btn btn-group">
+                                <h:commandButton rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id)==true and cityController.city.id==null}" styleClass="btn btn-lg btn-primary" value="Create" action="#{cityController.save()}">
+                                    <f:ajax execute="city-form" render="city-form city-table"/>
+                                </h:commandButton>
+                                <h:commandButton rendered="#{cityController.city.id!=null}" styleClass="btn btn-info"  value="Update" action="#{cityController.updateCity()}" >
+                                    <f:ajax execute="city-form" render="city-form city-table"/>
+                                </h:commandButton>
+                                <h:commandButton rendered="#{cityController.city.id!=null}" styleClass="btn btn-danger"  value="Clear" action="#{cityController.clearForm()}" >
+                                    <f:ajax execute="@this" render="city-form"/>
+                                </h:commandButton>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </h:body>
+    </ui:define>
+
+
+
+</ui:composition>
+

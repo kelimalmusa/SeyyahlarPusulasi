@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Admin/Template/Admin_Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="bootstrap.css"/>
+        <h:outputScript library="js" name="bootstrap.js"/>   
+    </h:head>
+    <ui:define name = "content">
+        <h:body>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <h:form id="pri-table" rendered="#{privilegeController.readPrivi(userController.userLogin.user_group.id)==true}">
+                            <div class=" btn btn-group">
+                                <h:commandButton styleClass="btn btn-primary" action="#{privilegeController.previous}" value="previous" />
+                                <h:commandButton styleClass="btn btn-success" action="#{privilegeController.next}" value="next" />
+                            </div>
+                            <p>page #{privilegeController.page} of #{privilegeController.pageCount()}</p>
+
+                            <h:form>
+                                <h:dataTable  styleClass="table table-striped table-hover" value="#{privilegeController.privilegeList}" var="privi" >
+                                    <h:column>
+                                        <f:facet name="header">ID</f:facet>
+                                            #{privi.id}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Group Name</f:facet>
+                                            #{privi.group.user_group}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">C</f:facet>
+                                            #{privi.c}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">R</f:facet>
+                                            #{privi.r}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">U</f:facet>
+                                            #{privi.u}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">D</f:facet>
+                                            #{privi.d}
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">process</f:facet>
+                                        <div class="btn btn-group">
+                                            <h:commandButton styleClass="btn btn-sm btn-danger"  rendered="#{privilegeController.deletePrivi(userController.userLogin.user_group.id)==true}" action="#{privilegeController.deleteConfirm(privi)}" value="Delete"></h:commandButton>
+                                            <h:commandButton styleClass="btn btn-sm btn-success" rendered="#{privilegeController.updatePrivi(userController.userLogin.user_group.id)==true}" action="#{privilegeController.updateForm(privi)}" value="Update">
+                                                <f:ajax execute="@this" render="pri-form"/>
+                                            </h:commandButton>
+                                        </div>
+                                    </h:column>
+                                </h:dataTable>
+                            </h:form>
+                        </h:form>
+                    </div>
+                    <div class="col-md-5">
+                        <h:form id="pri-form" rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id) or privilegeController.updatePrivi(userController.userLogin.user_group.id)}">
+                            <div class="form-group">
+                                <label for="BirUlk">Group</label>
+                                <h:selectOneMenu styleClass="custom-select" id="sedc" value="#{privilegeController.privilege.group}" converter="groupConverter">
+                                    <f:selectItems value="#{groupController.groupList}" var="Cr" itemValue="#{Cr}" itemLabel="#{Cr.user_group}">
+                                    </f:selectItems>
+                                </h:selectOneMenu>
+                            </div>
+                            <br/>
+                            <div class=" form-group">
+                                <label>Create</label>
+                                <h:selectBooleanCheckbox value="#{privilegeController.privilege.c}"/>
+                            </div>
+                            <div class=" form-group">
+                                <label>Read</label>
+                                <h:selectBooleanCheckbox value="#{privilegeController.privilege.r}"/>
+                            </div>
+                            <div class=" form-group">
+                                <label>Update</label>
+                                <h:selectBooleanCheckbox value="#{privilegeController.privilege.u}"/>
+                            </div>
+                            <div class=" form-group">
+                                <label>Delete</label>
+                                <h:selectBooleanCheckbox value="#{privilegeController.privilege.d}"/>
+                            </div>
+                            <div class="btn btn-group">
+                                <h:commandButton rendered="#{privilegeController.createPrivi(userController.userLogin.user_group.id)==true and privilegeController.privilege.id==null}" styleClass="btn btn-lg btn-primary" value="Create" action="#{privilegeController.create()}">
+                                    <f:ajax execute="pri-form" render="pri-form pri-table"/>
+                                </h:commandButton>
+                                <h:commandButton rendered="#{privilegeController.privilege.id!=null}" styleClass="btn btn-info"  value="Update" action="#{privilegeController.update()}" >
+                                    <f:ajax execute="pri-form" render="pri-form pri-table"/>
+                                </h:commandButton>
+                                <h:commandButton rendered="#{privilegeController.privilege.id!=null}" styleClass="btn btn-danger"  value="Clear" action="#{privilegeController.clearForm()}" >
+                                    <f:ajax execute="@this" render="pri-form"/>
+                                </h:commandButton>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </h:body>
+    </ui:define>
+
+
+
+</ui:composition>
+
